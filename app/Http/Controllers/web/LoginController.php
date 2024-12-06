@@ -9,6 +9,7 @@ use App\Models\Profissional; // Adicione este import para o model Profissional
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Session;
 
 class LoginController extends Controller
 {
@@ -59,6 +60,17 @@ class LoginController extends Controller
         // Retornar uma resposta de sucesso ou redirecionar conforme sua lógica
         return redirect()->route('login')->with('success', 'Usuário cadastrado com sucesso!');
     }
+    public function logout(Request $request)
+    {
+        Auth::logout(); // Desloga o usuário.
+        Session::flush(); // Limpa a sessão.
+        
+        $request->session()->invalidate(); // Invalida a sessão atual.
+        $request->session()->regenerateToken(); // Regenera o token CSRF.
+    
+        return redirect('/login')->with('status', 'Você saiu com sucesso!');
+    }
+    
     
 
     public function realizarLogin(Request $request)

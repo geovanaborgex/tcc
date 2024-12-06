@@ -80,9 +80,15 @@
                       <h3 style="color: white;">
                           Com profissionais qualificados ao seu lado e uma plataforma para acesso às suas fichas de treino, você alcançará seus objetivos com técnica e segurança, dando o seu melhor a cada repetição!            
                       </h3><br>
+                      
                     <a href="{{ url('/login') }}">
                     <button style="background-color: yellow; color: black; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
-                        Cadastre-se já!
+                        Cadastre-se já
+                    </button>
+
+                    <a href="{{ url('/cadastro') }}"></a>
+                    <button style="background-color: yellow; color: black; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                        Faça login
                     </button>
                     </a>
 

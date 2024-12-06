@@ -57,10 +57,15 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-  <section class="contact_section layout_padding">
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <section class="contact_section layout_padding">
     <div class="container">
       <div class="profile-container">
-     
       <div class="profile-info">
       <div class="container">
     @if (Auth::check())
@@ -94,11 +99,10 @@
                 </div>
                 <div class="form-group">
                     <label for="biografia">Biografia:</label>
-                    <textarea id="biografia" name="biografia" placeholder="Sua biografia">{{ old('biografia', $profissional->biografia ?? '') }}</textarea>
+                    <input type="text" id="biografia" name="biografia" placeholder="Sua biografia" value="{{ old('biografia', $profissional->biografia ?? '') }}">
                 </div>
             @endif
 
-            <!-- Campos Adicionais para Alunos -->
             @if (Auth::user()->tipo == 'A')
                 <div class="form-group">
                     <label for="telefone">Telefone:</label>
@@ -114,12 +118,10 @@
                 </div>
                 <div class="form-group">
                     <label for="biografia">Biografia: </label>
-                    <textarea id="biografia" name="biografia" placeholder="Sua biografia">{{ old('biografia', $aluno->biografia ?? '') }}</textarea>
+                    <input type="text" id="biografia" name="biografia" placeholder="Sua biografia" value="{{ old('biografia', $aluno->biografia ?? '') }}">
                 </div>
             @endif
 
-
-            <!-- Botão Salvar -->
             <button type="submit" style="background-color: #f8bc1a; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer;">Salvar Perfil</button>
         </form>
     @else
@@ -140,17 +142,24 @@
   <script type="text/javascript" src="js/bootstrap.js"></script>
 
   <script>  
-  // Seleciona o <a> que contém a imagem de perfil
-const ftPerfil = document.getElementById('ftPerfil');
-const ftPerfilImg = document.getElementById('ftPerfilImg'); // A imagem dentro do <a>
+        const ftPerfil = document.getElementById('ftPerfil');
+        const ftPerfilImg = document.getElementById('ftPerfilImg'); 
 
-// Variável global para armazenar a imagem selecionada
-let currentImageSrc = foto; 
+        let currentImageSrc = foto; 
 
-    function togglePassword() {
-    const senhaInput = document.getElementById('senha');
-    const tipo = senhaInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    senhaInput.setAttribute('type', tipo);
-}
+        function togglePassword() {
+                    const passwordInput = document.getElementById('senha');
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+
+                    const icon = document.querySelector('.form-group i');
+                    if (type === 'password') {
+                        icon.classList.remove('bi-eye');
+                        icon.classList.add('bi-eye-slash-fill');
+                    } else {
+                        icon.classList.remove('bi-eye-slash-fill');
+                        icon.classList.add('bi-eye');
+                    }
+                }
   </script>
 @endsection

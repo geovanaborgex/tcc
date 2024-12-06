@@ -13,8 +13,6 @@ use Log;
 class TreinoController extends Controller
 {
     
-   // App\Http\Controllers\TreinoController.php
-
    public function index($contrato_id)
    {
        // Buscar o contrato pelo ID fornecido e carregar as relações 'aluno' e 'profissional'
@@ -133,7 +131,7 @@ public function update(Request $request, $id)
         Log::info('Treino encontrado', ['treino' => $treino]);
 
         // Busca o treino e atualiza a categoria
-        $treino->categoria = $request->input('categoria');
+        $treino->categoria = $request->input('category');
         $treino->save();
 
         // Log para verificar se a categoria foi salva
@@ -149,16 +147,9 @@ public function update(Request $request, $id)
             Log::info('Exercício adicionado', ['exercicio' => $exercicio]);
         }
 
-        return response()->json(['message' => 'Treino atualizado com sucesso!']);
+        return response()->json(['status' => 'success', 'message' => 'Treino atualizado com sucesso!']);
     } catch (\Exception $e) {
-        // Log de erro
-        Log::error('Erro ao atualizar treino', [
-            'error' => $e->getMessage(),
-            'line' => $e->getLine(),
-            'file' => $e->getFile(),
-        ]);
-
-        return response()->json(['error' => 'Erro ao atualizar treino.'], 500);
+        return response()->json(['status' => 'error', 'message' => 'Erro ao atualizar o treino!']);
     }
 }
 

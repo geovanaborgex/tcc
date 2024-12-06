@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 use App\Models\Treino;
 use App\Models\User;
+use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Log;
 
 class ApiController extends Controller
 {
@@ -68,6 +70,109 @@ class ApiController extends Controller
         'treinos' => $treinos
     ]);
     }
+
+    public function perfil(Request $request)
+{
+    // Obter o usuário autenticado
+    $usuario = Auth::user();
+
+    // Verifica o tipo de usuário e prepara os dados de acordo
+    if ($usuario->tipo == 'P') {
+        $profissional = $usuario->profissional;  // Obter o profissional associado ao usuário
+        $userData = [
+            'name' => $usuario->name,
+            'email' => $usuario->email,
+            'formacao' => $profissional->formacao ?? '',
+            'biografia' => $profissional->biografia ?? '',
+            'telefone' => $usuario->telefone ?? '',
+            'peso' => $usuario->peso ?? '',
+            'altura' => $usuario->altura ?? '',
+        ];
+    } elseif ($usuario->tipo == 'A') {
+        $aluno = $usuario->aluno;  // Obter o aluno associado ao usuário
+        $userData = [
+            'name' => $usuario->name,
+            'email' => $usuario->email,
+            'formacao' => $aluno->formacao ?? '',
+            'biografia' => $aluno->biografia ?? '',
+            'telefone' => $aluno->telefone ?? '',
+            'peso' => $aluno->peso ?? '',
+            'altura' => $aluno->altura ?? '',
+        ];
+    }
+
+    // Retorna os dados em formato JSON
+    return response()->json([
+        'success' => true,
+        'data' => $userData,
+    ]);
+}
+
+public function updatePerfil(Request $request)
+{
+    // Obter o usuário autenticado
+    $usuario = Auth::user();
+
+    // Verificar se o usuário é do tipo Aluno
+    if ($usuario->tipo != 'A') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Acesso não autorizado.',
+        ], 403);
+    }
+
+    // Validação dos dados recebidos
+    $request->validate([
+        'nome' => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:users,email,' . $usuario->id,
+        'senha' => 'nullable|string|min:6',
+        'biografia' => 'nullable|string',
+        'telefone' => 'nullable|string|max:20',
+        'peso' => 'nullable|numeric|min:0',
+        'altura' => 'nullable|numeric|min:0',
+    ]);
+
+    // Atualizar os dados do usuário
+    $usuario->name = $request->input('nome');
+    $usuario->email = $request->input('email');
+
+    // Atualizar a senha se fornecida
+    if ($request->filled('senha')) {
+        $usuario->password = Hash::make($request->input('senha'));
+    }
+
+    // Obter o Aluno associado e atualizar os dados
+    $aluno = $usuario->aluno; // Relacionamento com o modelo Aluno
+    if ($aluno) {
+        $aluno->biografia = $request->input('biografia');
+        $aluno->telefone = $request->input('telefone');
+        $aluno->peso = $request->input('peso');
+        $aluno->altura = $request->input('altura');
+        $aluno->save();
+    } else {
+        return response()->json([
+            'success' => false,
+            'message' => 'Dados do aluno não encontrados.',
+        ], 404);
+    }
+
+    // Salvar as alterações do usuário
+    $usuario->save();
+
+    // Retornar resposta de sucesso
+    return response()->json([
+        'success' => true,
+        'message' => 'Perfil atualizado com sucesso!',
+        'data' => [
+            'nome' => $usuario->name,
+            'email' => $usuario->email,
+            'biografia' => $aluno->biografia ?? '',
+            'telefone' => $aluno->telefone ?? '',
+            'peso' => $aluno->peso ?? '',
+            'altura' => $aluno->altura ?? '',
+        ],
+    ]);
+}
 
     function atualizarToken(Request $Request){
         //PEGA O USUÁRIO LOGADO, DELETA SEUS TOKENS

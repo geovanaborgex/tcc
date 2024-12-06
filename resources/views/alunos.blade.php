@@ -12,10 +12,9 @@
         border: none;
         border-radius: 10px;
         cursor: pointer;
-        position: fixed;
-        margin-top: 30px;
-        right: 50px;
+        margin-left: 80%;
         font-size: 18px;
+        
     }
 
    
@@ -123,56 +122,69 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-12 my-5" style="color: #691bc2e6;">
-                        <h1 style="margin-left: 20px;">Alunos em monitoramento</h1>
-                        <button class="add-button" id="addAlunoBtn">Adicionar aluno</button>
+                       <div><td> <h1 style="margin-left: 20px;">Alunos em monitoramento</h1></td>
+                        <td><button class="add-button" id="addAlunoBtn">Adicionar aluno</button></td></div>
                          <!-- Campo de pesquisa -->
-                         <form method="GET" action="{{ route('alunos.index') }}" style="margin-bottom: 20px;">
-                            <input type="text" name="search" placeholder="Buscar aluno..." value="{{ request('search') }}" style="padding: 8px; width: 300px; border-radius: 4px; border: 1px solid #ccc;">
-                            <button type="submit" class="add-buttonn" style="margin-left: 10px;">Pesquisar</button>
+                        <form action="{{ route('alunos.index') }}" method="GET" class="mb-4">
+                            <div class="input-group" style="width: 50%; !important">
+                                <input 
+                                    type="text" 
+                                    name="search" 
+                                    class="form-control" 
+                                    placeholder="Buscar alunos" 
+                                    value="{{ request('search') }}" 
+                                />
+                                <button type="submit" style="margin-left:10px;" class="btn btn-primary">Buscar</button>
+                            </div>
                         </form>
-                        </div>
-                    </div>
-                </div>
-                <table class="table table-transparent table-responsive">
-                    <thead>
-                        <tr>
-                            <th class="text-center" style="width: 1%"></th>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>Data de Início</th>
-                            <th>Data de Término</th>
-                            <th>Treino</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($alunos as $aluno)
-                            @foreach($aluno->contrato as $contrato)
-                                <tr>
-                                    <td class="text-center">{{ $loop->parent->iteration }}</td>
-                                    <td>{{ $aluno->user ? $aluno->user->name : 'Nome não encontrado' }}</td>
-                                    <td>{{ $aluno->user ? $aluno->user->email : 'Email não encontrado' }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($contrato->data_inicio)->format('d/m/Y') ?? 'Data não encontrada' }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($contrato->data_termino)->format('d/m/Y') ?? 'Data não encontrada' }}</td>
-                                    <td><button class="add-buttonn" onclick="window.location.href='{{ route('criartreino', ['contrato_id' => $contrato->id]) }}'">Adicionar treino</button></td>
-                                    <td>
-                                        <button class="add-buttonn" onclick="openEditModal({{ $aluno }})">✏️ Editar</button>
-                                        <form id="deleteAluno({{ $aluno->id }})" action="{{ route('alunos.destroy', $aluno->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" style=" background-color: #691bc2e6;" class="add-buttonn">🗑️ Deletar</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center">Nenhum aluno encontrado.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
 
-                </table>
+                    <table class="table table-transparent table-responsive">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 1%"></th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Data de Início</th>
+                                <th>Data de Término</th>
+                                <th>Treino</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($alunos as $aluno)
+                                @foreach($aluno->contrato as $contrato)
+                                    <tr><!-- Índice para cada linha -->
+                                        <td class="text-center">
+                                            {{ ($alunos->currentPage() - 1) * $alunos->perPage() + $loop->parent->iteration }}
+                                        </td>
+                                        
+                                        <td>{{ $aluno->user ? $aluno->user->name : 'Nome não encontrado' }}</td>
+                                        <td>{{ $aluno->user ? $aluno->user->email : 'Email não encontrado' }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($contrato->data_inicio)->format('d/m/Y') ?? 'Data não encontrada' }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($contrato->data_termino)->format('d/m/Y') ?? 'Data não encontrada' }}</td>
+                                        <td>
+                                            <button class="add-buttonn" onclick="window.location.href='{{ route('criartreino', ['contrato_id' => $contrato->id]) }}'">
+                                                Adicionar treino
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button class="add-butonn" style="background-color: transparent; border:none; color:black;" onclick="openEditModal({{ $aluno }})">✏️ </button>
+                                            <form id="deleteAluno({{ $aluno->id }})" action="{{ route('alunos.destroy', $aluno->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" style="background-color: transparent; color:black;" class="">🗑️</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">Nenhum aluno encontrado.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-center mt-4">{{ $alunos->links() }}</div>
             </div>
         </div>
     </div>
@@ -230,12 +242,10 @@
     @csrf
     @method('PUT')
                 <input type="hidden" id="editAlunoId" name="id">
-                
+
                 <label for="name">Nome:</label>
                 <input type="text" id="editName" name="name" >
 
-                <label for="email">Email:</label>
-                <input type="email" id="editEmail" name="email" >
 
                 <label for="telefone">Telefone:</label>
                 <input type="tel" id="editTelefone" name="telefone" >
@@ -265,22 +275,35 @@
         };
     });
 
-    function openEditModal(aluno) {
+  // Função para abrir o modal de edição
+function openEditModal(aluno) {
     const editAlunoModal = document.getElementById('editAlunoModal');
     editAlunoModal.style.display = 'flex';
 
     // Preenche os campos do formulário com os dados do aluno
-    document.getElementById('editAlunoId').value = aluno.id;
-    document.getElementById('editName').value = aluno.user ? aluno.user.name : '';
-    document.getElementById('editEmail').value = aluno.user ? aluno.user.email : '';
-    document.getElementById('editTelefone').value = aluno.telefone;
-    document.getElementById('editPeso').value = aluno.peso;
-    document.getElementById('editAltura').value = aluno.altura;
+    document.getElementById('editName').value = aluno.user && aluno.user.name ? aluno.user.name : '';
+    document.getElementById('editTelefone').value = aluno.telefone || '';
+    document.getElementById('editPeso').value = aluno.peso || '';
+    document.getElementById('editAltura').value = aluno.altura || '';
 
     // Define a URL da ação do formulário com o ID do aluno
     const editForm = document.getElementById('editAlunoForm');
-    editForm.action = `{{ url('alunos') }}/${aluno.id}`;
+    editForm.action = `/alunos/${aluno.id}`;
 }
+
+// Fechar o modal ao clicar no botão de fechar
+document.querySelector('.close-btn').addEventListener('click', () => {
+    const editAlunoModal = document.getElementById('editAlunoModal');
+    editAlunoModal.style.display = 'none';
+});
+
+// Fechar o modal ao clicar fora do conteúdo
+window.addEventListener('click', (event) => {
+    const editAlunoModal = document.getElementById('editAlunoModal');
+    if (event.target === editAlunoModal) {
+        editAlunoModal.style.display = 'none';
+    }
+});
 
 
 </script>

@@ -213,33 +213,40 @@
                     </div>
                 </form>
 
-        <!-- Modal de adicionar exercício -->
-        <div id="addExercicioModal" class="modal" style="display:none;">
-                            <div class="modal-content">
-                                <span class="close-btn" id="closeExercicioModal">&times;</span>
-                                <h3>Adicionar Exercício</h3>
+      <!-- Modal de adicionar exercício -->
+<div id="addExercicioModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close-btn" id="closeExercicioModal">&times;</span>
+        <h3>Adicionar Exercício</h3>
 
-                                <label for="nomeExercicio">Nome do Exercício</label>
-                                <input type="text" id="nomeExercicio" name="nome_exercicio">
+        <label for="nomeExercicio">Nome do Exercício</label>
+        <input type="text" id="nomeExercicio" name="nome_exercicio">
+        <span id="nomeExercicioError" class="error-message" style="color: red; display: none;">Por favor, preencha este campo</span>
 
-                                <label for="series">Séries</label>
-                                <input type="number" id="series" name="series">
+        <label for="series">Séries</label>
+        <input type="number" id="series" name="series">
+        <span id="seriesError" class="error-message" style="color: red; display: none;">Por favor, preencha este campo</span>
 
-                                <label for="repeticoes">Repetições</label>
-                                <input type="number" id="repeticoes" name="repeticoes">
+        <label for="repeticoes">Repetições</label>
+        <input type="number" id="repeticoes" name="repeticoes">
+        <span id="repeticoesError" class="error-message" style="color: red; display: none;">Por favor, preencha este campo</span>
 
-                                <label for="carga">Carga (kg)</label>
-                                <input type="number" id="carga" name="carga">
+        <label for="carga">Carga (kg)</label>
+        <input type="number" id="carga" name="carga">
+        <span id="cargaError" class="error-message" style="color: red; display: none;">Por favor, preencha este campo</span>
 
-                                <label for="observacao">Observação</label>
-                                <input type="text" id="observacao" name="observacao">
+        <label for="observacao">Observação</label>
+        <input type="text" id="observacao" name="observacao">
+        <span id="observacaoError" class="error-message" style="color: red; display: none;">Por favor, preencha este campo</span>
 
-                                <div class="modal-footer">
-                                    <button type="button" id="salvarExercicioBtn">Salvar Exercício</button>
-                                    <button type="button" id="addOutroExercicioBtn">Adicionar Mais Exercícios</button>
-                                </div>
-            </div>
+        <div class="modal-footer">
+            <button type="button" id="salvarExercicioBtn">Salvar Exercício</button>
+            <button type="button" id="addOutroExercicioBtn">Adicionar Mais Exercícios</button>
         </div>
+    </div>
+</div>
+
+
 
         <!-- Modal de ver treinos-->
         <div id="treinosModal" class="modal" style="display:none;">
@@ -254,8 +261,8 @@
         <div id="editarTreinoModal" class="modal" style="display: none;">
             <div class="modal-content">
                 <h3>Editar Treino</h3>
-                <label for="categoria">Categoria:</label>
-                <input type="text" id="categoria" name="categoria" required><br>
+                <label for="category">Categoria:</label>
+                <input type="text" id="category" name="category" required><br>
                 <div id="exerciciosContainer"></div>
                 <button onclick="adicionarExercicio()">Adicionar Exercício</button>
                 <button onclick="salvarTreino()">Salvar</button>
@@ -263,10 +270,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
 
             </div>
         </div>
@@ -276,122 +279,159 @@
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-                <!-- -----------------modal de inserir exercícios e criar treino------------------- -->
-        <script>
+               <!-- -----------------modal de inserir exercícios e criar treino------------------- -->
+<script>
 
-            let contadorExercicio = 0;
+let contadorExercicio = 0;
 
-            // Abrir modal de adicionar exercício
-            document.getElementById('addExercicioBtn').addEventListener('click', function() {
-                document.getElementById('addExercicioModal').style.display = 'flex';
-            });
+// Abrir modal de adicionar exercício
+document.getElementById('addExercicioBtn').addEventListener('click', function() {
+    document.getElementById('addExercicioModal').style.display = 'flex';
+});
+
+// Fechar modal
+document.getElementById('closeExercicioModal').addEventListener('click', function() {
+    document.getElementById('addExercicioModal').style.display = 'none';
+});
+
+// Adicionar exercício ao formulário e à tabela
+// Adicionar exercício ao formulário e à tabela
+document.getElementById('salvarExercicioBtn').addEventListener('click', function() {
+    // Obter valores dos campos de exercício
+    let nome = document.getElementById('nomeExercicio').value;
+    let series = document.getElementById('series').value;
+    let repeticoes = document.getElementById('repeticoes').value;
+    let carga = document.getElementById('carga').value;
+    let observacao = document.getElementById('observacao').value;
+
+    // Limpar mensagens de erro anteriores
+    document.getElementById('nomeExercicioError').style.display = 'none';
+    document.getElementById('seriesError').style.display = 'none';
+    document.getElementById('repeticoesError').style.display = 'none';
+    document.getElementById('cargaError').style.display = 'none';
+    document.getElementById('observacaoError').style.display = 'none';
+
+    let camposValidos = true;
+
+    // Verificar se todos os campos foram preenchidos e exibir mensagens de erro
+    if (!nome) {
+        document.getElementById('nomeExercicioError').style.display = 'inline';
+        camposValidos = false;
+    }
+    if (!series) {
+        document.getElementById('seriesError').style.display = 'inline';
+        camposValidos = false;
+    }
+    if (!repeticoes) {
+        document.getElementById('repeticoesError').style.display = 'inline';
+        camposValidos = false;
+    }
+    if (!carga) {
+        document.getElementById('cargaError').style.display = 'inline';
+        camposValidos = false;
+    }
+    if (!observacao) {
+        document.getElementById('observacaoError').style.display = 'inline';
+        camposValidos = false;
+    }
+
+    // Se algum campo estiver vazio, não salvar o exercício
+    if (!camposValidos) {
+        return; // Impede que o exercício seja adicionado
+    }
+
+    // Criar novo item de exercício na tabela
+    const exercicioHTML = `
+        <tr>
+            <td>${nome}</td>
+            <td>${series}</td>
+            <td>${repeticoes}</td>
+            <td>${carga}</td>
+            <td>${observacao}</td>
+            <td><button class="deletar-btn" style="border:none; background-color: transparent;">🗑️</button></td>
             
-            // Fechar modal
-            document.getElementById('closeExercicioModal').addEventListener('click', function() {
-                document.getElementById('addExercicioModal').style.display = 'none';
+            <input type="hidden" name="exercicios[${contadorExercicio}][nome]" value="${nome}">
+            <input type="hidden" name="exercicios[${contadorExercicio}][series]" value="${series}">
+            <input type="hidden" name="exercicios[${contadorExercicio}][repeticoes]" value="${repeticoes}">
+            <input type="hidden" name="exercicios[${contadorExercicio}][carga]" value="${carga}">
+            <input type="hidden" name="exercicios[${contadorExercicio}][observacao]" value="${observacao}">
+        </tr>
+    `;
+
+    document.querySelector('#exerciciosTable tbody').insertAdjacentHTML('beforeend', exercicioHTML);
+
+    // Incrementar o contador de exercícios
+    contadorExercicio++;
+
+    // Fechar modal
+    document.getElementById('addExercicioModal').style.display = 'none';
+
+    // Limpar campos do modal
+    document.getElementById('nomeExercicio').value = '';
+    document.getElementById('series').value = '';
+    document.getElementById('repeticoes').value = '';
+    document.getElementById('carga').value = '';
+    document.getElementById('observacao').value = '';
+});
+
+
+// Continuar adicionando mais exercícios
+document.getElementById('addOutroExercicioBtn').addEventListener('click', function() {
+    document.getElementById('salvarExercicioBtn').click(); // Salva o exercício atual
+    document.getElementById('addExercicioModal').style.display = 'flex'; // Mantém o modal aberto
+});
+
+// Deletar exercício ao clicar no botão de exclusão
+document.querySelector('#exerciciosTable').addEventListener('click', function(event) {
+    if (event.target && event.target.classList.contains('deletar-btn')) {
+        // Encontrar a linha da tabela onde o botão foi clicado
+        const linhaExercicio = event.target.closest('tr');
+        if (linhaExercicio) {
+            linhaExercicio.remove(); // Remove a linha da tabela
+        }
+    }
+});
+
+// Enviar formulário
+document.getElementById('treinoForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Evitar o envio normal do formulário
+
+    let formData = new FormData(this); // Capturar os dados do formulário
+
+    fetch("{{ route('treinos.store') }}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            // Exibir o alerta SweetAlert2
+            Swal.fire({
+                title: 'Sucesso!',
+                text: 'Treino adicionado com sucesso!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Recarregar a página ou redirecionar após o alerta
+                window.location.reload();
             });
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        Swal.fire({
+            title: 'Erro!',
+            text: 'Ocorreu um erro ao adicionar o treino.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    });
+});
 
-            // Adicionar exercício ao formulário e à tabela
-            document.getElementById('salvarExercicioBtn').addEventListener('click', function() {
-                // Obter valores dos campos de exercício
-                const nome = document.getElementById('nomeExercicio').value;
-                const series = document.getElementById('series').value;
-                const repeticoes = document.getElementById('repeticoes').value;
-                const carga = document.getElementById('carga').value;
-                const observacao = document.getElementById('observacao').value;
-
-                // Criar novo item de exercício na tabela
-                const exercicioHTML = `
-                    <tr>
-                        <td>${nome}</td>
-                        <td>${series}</td>
-                        <td>${repeticoes}</td>
-                        <td>${carga}</td>
-                        <td>${observacao}</td>
-                        <td><button class="deletar-btn" style="background-color: #f8bc1a;">🗑️</button></td>
-                        
-                        <input type="hidden" name="exercicios[${contadorExercicio}][nome]" value="${nome}">
-                        <input type="hidden" name="exercicios[${contadorExercicio}][series]" value="${series}">
-                        <input type="hidden" name="exercicios[${contadorExercicio}][repeticoes]" value="${repeticoes}">
-                        <input type="hidden" name="exercicios[${contadorExercicio}][carga]" value="${carga}">
-                        <input type="hidden" name="exercicios[${contadorExercicio}][observacao]" value="${observacao}">
-                    </tr>
-                `;
-
-                document.querySelector('#exerciciosTable tbody').insertAdjacentHTML('beforeend', exercicioHTML);
-
-                // Incrementar o contador de exercícios
-                contadorExercicio++;
-
-                // Fechar modal
-                document.getElementById('addExercicioModal').style.display = 'none';
-
-                // Limpar campos do modal
-                document.getElementById('nomeExercicio').value = '';
-                document.getElementById('series').value = '';
-                document.getElementById('repeticoes').value = '';
-                document.getElementById('carga').value = '';
-                document.getElementById('observacao').value = '';
-            });
-
-            // Continuar adicionando mais exercícios
-            document.getElementById('addOutroExercicioBtn').addEventListener('click', function() {
-                document.getElementById('salvarExercicioBtn').click(); // Salva o exercício atual
-                document.getElementById('addExercicioModal').style.display = 'flex'; // Mantém o modal aberto
-            });
-
-            // Deletar exercício ao clicar no botão de exclusão
-            document.querySelector('#exerciciosTable').addEventListener('click', function(event) {
-                if (event.target && event.target.classList.contains('deletar-btn')) {
-                    // Encontrar a linha da tabela onde o botão foi clicado
-                    const linhaExercicio = event.target.closest('tr');
-                    if (linhaExercicio) {
-                        linhaExercicio.remove(); // Remove a linha da tabela
-                    }
-                }
-            });
-
-            // Enviar formulário
-            document.getElementById('treinoForm').addEventListener('submit', function (e) {
-                e.preventDefault(); // Evitar o envio normal do formulário
-
-                let formData = new FormData(this); // Capturar os dados do formulário
-
-                fetch("{{ route('treinos.store') }}", {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message) {
-                        // Exibir o alerta SweetAlert2
-                        Swal.fire({
-                            title: 'Sucesso!',
-                            text: 'Treino adicionado com sucesso!',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            // Recarregar a página ou redirecionar após o alerta
-                            window.location.reload();
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    Swal.fire({
-                        title: 'Erro!',
-                        text: 'Ocorreu um erro ao adicionar o treino.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                });
-            });
-
-        </script>
-
+</script>
 
                 <!-- -----------------modal de ver treinos------------------- -->
 <script>
@@ -484,16 +524,20 @@
     });
 });
 
+
+
     //       AÇÃO: Editar
-   document.addEventListener('click', function(event) {
+    document.addEventListener('click', function(event) {
     if (event.target.classList.contains('add-buttonn') && event.target.textContent.includes("✏️")) {
         const treinoId = event.target.getAttribute('data-treino-id');
+
+        // Armazene o ID do treino em um campo oculto ou diretamente no modal
+        document.getElementById('editarTreinoModal').setAttribute('data-treino-id', treinoId);
 
         fetch(`/treinos/${treinoId}/edit`)
             .then(response => response.json())
             .then(treino => {
-                // Verificar se o modal e os campos existem
-                const categoriaInput = document.getElementById('categoria');
+                const categoriaInput = document.getElementById('category');
                 const exerciciosContainer = document.getElementById('exerciciosContainer');
 
                 if (!categoriaInput || !exerciciosContainer) {
@@ -506,7 +550,6 @@
 
                 treino.exercicios.forEach((exercicio, index) => {
                     exerciciosContainer.innerHTML += `
-
                         <div class="exercicio">
                             <label for="nome_${index}">Nome:</label>
                             <input type="text" id="nome_${index}" name="exercicios[${index}][nome]" value="${exercicio.nome}" required>
@@ -533,14 +576,13 @@
     }
 });
 
+    function fecharEditarModal() {
+        document.getElementById('editarTreinoModal').style.display = 'none';
+    }
 
-function fecharEditarModal() {
-    document.getElementById('editarTreinoModal').style.display = 'none';
-}
-
-function salvarTreino() {
-    const treinoId = document.querySelector('.add-buttonn[data-treino-id]').getAttribute('data-treino-id');
-    const categoria = document.getElementById('categoria').value;
+    function salvarTreino() {
+    const treinoId = document.getElementById('editarTreinoModal').getAttribute('data-treino-id'); // ID correto
+    const category = document.getElementById('category').value;
     const exercicios = [...document.querySelectorAll('#exerciciosContainer .exercicio')].map((div, index) => ({
         nome: div.querySelector(`#nome_${index}`).value,
         series: div.querySelector(`#series_${index}`).value,
@@ -550,25 +592,55 @@ function salvarTreino() {
     }));
 
     fetch(`/treinos/${treinoId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        },
-        body: JSON.stringify({ categoria, exercicios }),
+    method: 'PUT',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+    },
+    body: JSON.stringify({ category, exercicios }),
+})
+    .then(response => {
+        if (!response.ok) {
+            // Se a resposta não for "ok", lance um erro para o catch
+            throw new Error('Erro na requisição');
+        }
+        return response.json(); // Parse da resposta JSON
     })
-        .then(response => {
-            if (response.ok) {
-                alert('Treino atualizado com sucesso!');
-                fecharEditarModal();
-            } else {
-                alert('Erro ao salvar treino.');
-            }
-        })
-        .catch(error => console.error('Erro ao salvar treino:', error));
+    .then(data => {
+        console.log(data); // Log para verificar a estrutura da resposta
+        if (data.status === 'success') { // Verifica "status" em vez de "success"
+            Swal.fire({
+                title: 'Sucesso!',
+                text: data.message || 'Treino atualizado com sucesso!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Atualizar a página ou a interface
+                window.location.reload();
+            });
+        } else {
+            Swal.fire({
+                title: 'Erro!',
+                text: data.message || 'Não foi possível atualizar o treino.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        Swal.fire({
+            title: 'Erro!',
+            text: 'Ocorreu um erro inesperado.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    });
+
 }
 
-function adicionarExercicio() {
+
+    function adicionarExercicio() {
     const exerciciosContainer = document.getElementById('exerciciosContainer');
     const index = exerciciosContainer.children.length;
 
@@ -591,7 +663,11 @@ function adicionarExercicio() {
         </div>
     `;
 }
-    //---fecha o modal de ver treinos---//
+   
+
+
+
+//---fecha o modal de ver treinos---//
     function fecharModal() {
             document.getElementById('treinosModal').style.display = 'none';
         }
