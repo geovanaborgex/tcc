@@ -28,6 +28,15 @@
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Popper.js (necessário para o Bootstrap) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
   <!-- responsive style -->
   <link href="{{ url('assets/css/responsive.css')}}" rel="stylesheet" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -116,7 +125,10 @@
         </header>
 
     @yield('content')
-   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
    
 </body>
 </html>
