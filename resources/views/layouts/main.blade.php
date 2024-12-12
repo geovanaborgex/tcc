@@ -111,7 +111,8 @@
                                 @csrf
                             </form>
                             <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Log out
+                   
+                            Log out
                             </a>
                         </li>
                         </ul>
