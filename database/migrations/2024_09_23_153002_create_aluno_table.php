@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('aluno', function (Blueprint $table) {
             $table->id();
-            $table->string('telefone', 45);
+            $table->string('telefone', 45)->nullable();
             $table->float('peso')->nullable();
             $table->float('altura')->nullable();
             $table->text('biografia')->nullable();

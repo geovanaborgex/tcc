@@ -134,7 +134,7 @@
                                     placeholder="Buscar alunos" 
                                     value="{{ request('search') }}" 
                                 />
-                                <button type="submit" style="margin-left:10px;" class="btn btn-primary">Buscar</button>
+                                <button type="submit" style="margin-left:10px;" class="btn btn-primary"> <i class="fas fa-search"></i></button>
                             </div>
                         </form>
 

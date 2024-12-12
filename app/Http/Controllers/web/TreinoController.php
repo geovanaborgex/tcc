@@ -82,12 +82,12 @@ class TreinoController extends Controller
     public function getTreinos($contrato_id)
     {
     try {
-        \Log::info("Iniciando busca de treinos para o contrato com ID: " . $contrato_id);
+        Log::info("Iniciando busca de treinos para o contrato com ID: " . $contrato_id);
 
         // Verifica se o contrato realmente existe
         $contrato = Contrato::find($contrato_id);
         if (!$contrato) {
-            \Log::error("Contrato não encontrado para o ID: " . $contrato_id);
+            Log::error("Contrato não encontrado para o ID: " . $contrato_id);
             return response()->json(['error' => 'Contrato não encontrado.'], 404);
         }
 
@@ -98,17 +98,17 @@ class TreinoController extends Controller
 
         // Verifica se algum treino foi encontrado
         if ($treinos->isEmpty()) {
-            \Log::info("Nenhum treino encontrado para o contrato com ID: " . $contrato_id);
+            Log::info("Nenhum treino encontrado para o contrato com ID: " . $contrato_id);
             return response()->json(['message' => 'Nenhum treino encontrado para este contrato.'], 404);
         }
 
         // Log para ver os treinos que foram encontrados
-        \Log::info("Treinos encontrados: ", $treinos->toArray());
+        Log::info("Treinos encontrados: ", $treinos->toArray());
 
         return response()->json($treinos);
 
     } catch (\Exception $e) {
-        \Log::error("Erro ao buscar treinos para o contrato " . $contrato_id . ": " . $e->getMessage());
+        Log::error("Erro ao buscar treinos para o contrato " . $contrato_id . ": " . $e->getMessage());
         return response()->json(['error' => 'Erro ao buscar treinos.'], 500);
     }
 }

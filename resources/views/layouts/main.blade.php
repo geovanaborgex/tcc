@@ -28,6 +28,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -40,6 +43,7 @@
   <!-- responsive style -->
   <link href="{{ url('assets/css/responsive.css')}}" rel="stylesheet" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
+
 
 </head>
 
@@ -58,10 +62,8 @@
                 <div class="contact_nav" id="">
                     <ul class="navbar-nav ">
                     <li class="nav-item">
-                        
                     </li>
                     <li class="nav-item">
-                    
                     </li>
                     <li class="nav-item" 
                         @if(Auth::check())
@@ -88,34 +90,33 @@
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <div class="d-flex  flex-column flex-lg-row align-items-center">
-                        <ul class="navbar-nav  ">
-                        <li class="nav-item active">
-                        <a class="nav-link" href="{{ url( '/logado') }}">Home</a>
+                    <ul class="navbar-nav">
+                        <li class="nav-item {{ Request::is('logado') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ url('/logado') }}">Home</a>
                         </li>
                         
                         @if (auth()->user()->tipo == 'P')
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ url( '/alunos') }}">Alunos</a>
-                                </li>
-                            @else
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ url('/treino-aluno') }}">Treinos</a>
-                                </li>
-                            @endif
+                            <li class="nav-item {{ Request::is('alunos') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ url('/alunos') }}">Alunos</a>
+                            </li>
+                        @else
+                            <li class="nav-item {{ Request::is('treino-aluno') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ url('/treino-aluno') }}">Treinos</a>
+                            </li>
+                        @endif
 
-                        <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/perfil') }}">Perfil</a>
+                        <li class="nav-item {{ Request::is('perfil') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ url('/perfil') }}">Perfil</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item {{ Request::is('logout') ? 'active' : '' }}">
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
                             <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                   
-                            Log out
+                                <i class="fas fa-sign-out-alt"></i>
                             </a>
                         </li>
-                        </ul>
+                    </ul>
 
                     </div>
                     </div>

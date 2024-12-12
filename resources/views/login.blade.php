@@ -53,13 +53,15 @@
         <div class="toggle-container">
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
-                    <h1>Bem vindo de volta!</h1>
-                    <p>Insira seus dados de login.</p>
+                    <h1>Bem vindo a Webgym!</h1><br>
+                    <center><img src="{{url ('assets/images/logo.png')}}" alt="">
+                    </center>
                     <button class="hidden" id="login">Login</button>
                 </div>
                 <div class="toggle-panel toggle-right">
-                    <h1>Olá seja bem vindo a Webgym!</h1>
-                    <p>Cadastre-se para ter acesso ao nosso sistema.</p>
+                    <h1>Bem vindo a Webgym!</h1><br>
+                    <center><img src="{{url ('assets/images/logo.png')}}" alt="">
+                    </center>
                     <button class="hidden" id="register">Cadastro</button>
                 </div>
             </div>
